@@ -7,7 +7,7 @@ described [here](http://hollow.how/getting-started/#consumer-api-generation)
 In order to use, add plugin to your `pom.xml` file and configure it
 ```
 <plugin>
-    <groupId>com.github.igorperikov.hollow</groupId>
+    <groupId>com.github.igorperikov</groupId>
     <artifactId>hollow-maven-plugin</artifactId>
     <version>0.1.0</version>
     <configuration>
