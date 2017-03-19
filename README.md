@@ -1,4 +1,4 @@
-#Hollow-api-generator-plugin
+# Hollow-api-generator-plugin
 
 This plugin provides goal for generating hollow consumer api, that is 
 described [here](http://hollow.how/getting-started/#consumer-api-generation)
