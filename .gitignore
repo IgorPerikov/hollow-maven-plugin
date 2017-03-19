@@ -1,0 +1,19 @@
+.mvn
+*.bat
+
+*.iml
+.idea/
+
+build/
+*.class
+*logs
+
+# building
+target
+build
+null
+tmp*
+temp*
+dist
+test-output
+build.log
