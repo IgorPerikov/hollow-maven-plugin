@@ -9,7 +9,7 @@
 
     <name>Hollow maven plugin</name>
     <description>This plugin provides goal for generating hollow consumer api</description>
-    <url>https://github.com/IgorPerikov/maven-hollow-plugin</url>
+    <url>https://github.com/IgorPerikov/hollow-maven-plugin</url>
 
     <licenses>
         <license>
@@ -20,10 +20,10 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/IgorPerikov/maven-hollow-plugin</url>
-        <connection>scm:git:git://github.com/IgorPerikov/maven-hollow-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:IgorPerikov/maven-hollow-plugin.git</developerConnection>
-      <tag>HEAD</tag>
+        <url>https://github.com/IgorPerikov/hollow-maven-plugin</url>
+        <connection>scm:git:git://github.com/IgorPerikov/hollow-maven-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:IgorPerikov/hollow-maven-plugin.git</developerConnection>
+        <tag>HEAD</tag>
   </scm>
 
     <developers>
