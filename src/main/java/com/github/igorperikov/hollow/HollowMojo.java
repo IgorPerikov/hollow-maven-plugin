@@ -3,11 +3,15 @@ package com.github.igorperikov.hollow;
 import com.netflix.hollow.api.codegen.HollowAPIGenerator;
 import com.netflix.hollow.core.write.HollowWriteStateEngine;
 import com.netflix.hollow.core.write.objectmapper.HollowObjectMapper;
+import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Execute;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
@@ -15,10 +19,28 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-@Mojo(name = "generate")
+@Mojo(name = "generate",
+        requiresDependencyCollection = ResolutionScope.COMPILE,
+        requiresDependencyResolution = ResolutionScope.COMPILE,
+        defaultPhase = LifecyclePhase.GENERATE_SOURCES,
+        threadSafe = true
+)
+@Execute(goal = "generate", phase=LifecyclePhase.GENERATE_SOURCES)
 public class HollowMojo extends AbstractMojo {
+
+    /**
+     * Location of the output directory.
+     */
+    @Parameter(
+            property = "outputDirectory",
+            defaultValue = "${project.build.directory}/generated-sources/hollow/")
+    public String outputDirectory;
 
     private final String relativeJavaSourcesPath = "/src/main/java/";
 
@@ -36,25 +58,21 @@ public class HollowMojo extends AbstractMojo {
 
     private File projectDirFile;
     private String projectDirPath;
-    private String javaSourcesPath;
-    private String compiledClassesPath;
+    private String targetSourcesPath;
 
-    private URLClassLoader urlClassLoader;
-
+    
     public void execute() throws MojoExecutionException, MojoFailureException {
         projectDirFile = project.getBasedir();
         projectDirPath = projectDirFile.getAbsolutePath();
-        javaSourcesPath = projectDirPath + relativeJavaSourcesPath;
-        compiledClassesPath = projectDirPath + "/target/classes/";
+        targetSourcesPath = outputDirectory;
 
-        initClassLoader();
 
         HollowWriteStateEngine writeEngine = new HollowWriteStateEngine();
         HollowObjectMapper mapper = new HollowObjectMapper(writeEngine);
 
         Collection<Class<?>> datamodelClasses = extractClasses(packagesToScan);
         for (Class<?> clazz : datamodelClasses) {
-            getLog().debug("Initialize schema for class " + clazz.getName());
+            getLog().info("Initialize schema for class " + clazz.getName());
             mapper.initializeTypeState(clazz);
         }
 
@@ -67,7 +85,7 @@ public class HollowMojo extends AbstractMojo {
 
         String apiTargetPath = buildPathToApiTargetFolder(apiPackageName);
 
-        cleanupAndCreateFolders(apiTargetPath);
+        this.project.addCompileSourceRoot( outputDirectory );
         try {
             generator.generateFiles(apiTargetPath);
         } catch (IOException e) {
@@ -77,90 +95,50 @@ public class HollowMojo extends AbstractMojo {
 
     private Collection<Class<?>> extractClasses(List<String> packagesToScan) {
         Set<Class<?>> classes = new HashSet<>();
+        Set<URL> urlsToScan = new HashSet<>();
+        ClassLoader projectClassloader = getProjectClassloader();
 
-        for (String packageToScan : packagesToScan) {
-            File packageFile = buildPackageFile(packageToScan);
-
-            List<File> allFilesInPackage = findFilesRecursively(packageFile);
-            List<String> classNames = new ArrayList<>();
-            for (File file : allFilesInPackage) {
-                String filePath = file.getAbsolutePath();
-                getLog().debug("Candidate for schema initialization " + filePath);
-                if (filePath.endsWith(".java") &&
-                        !filePath.endsWith("package-info.java") &&
-                        !filePath.endsWith("module-info.java")
-                        ) {
-                    String relativePathToFile = removeSubstrings(filePath, projectDirPath, relativeJavaSourcesPath);
-                    classNames.add(convertFolderPathToPackageName(removeSubstrings(relativePathToFile, ".java")));
-                }
-            }
-
-            for (String fqdn : classNames) {
-                try {
-                    Class<?> clazz = urlClassLoader.loadClass(fqdn);
-                    classes.add(clazz);
-                } catch (ClassNotFoundException e) {
-                    getLog().warn("{} class not found " + fqdn);
-                }
+        FastClasspathScanner scanner = new FastClasspathScanner(packagesToScan.toArray(new String[packagesToScan.size()])).addClassLoader(projectClassloader);
+        List<String> classNames = scanner.scan().getNamesOfAllClasses();
+        getLog().info("Found " + classNames.size() + " classes");
+        for (String className : classNames) {
+            try {
+                classes.add(Class.forName(className, false, projectClassloader));
+            } catch (ClassNotFoundException e) {
+                getLog().error("couldn't add class " + className + " to the set of classes for some reason");
             }
         }
         return classes;
     }
 
-    private List<File> findFilesRecursively(File packageFile) {
-        List<File> foundFiles = new ArrayList<>();
-        if (packageFile.exists()) {
-            for (File file : packageFile.listFiles()) {
-                if (file.isDirectory()) {
-                    foundFiles.addAll(findFilesRecursively(file));
-                } else {
-                    foundFiles.add(file);
-                }
-            }
-        }
-        return foundFiles;
-    }
-
-    private File buildPackageFile(String packageName) {
-        return new File(javaSourcesPath + convertPackageNameToFolderPath(packageName));
-    }
-
     private String buildPathToApiTargetFolder(String apiPackageName) {
-        return javaSourcesPath + convertPackageNameToFolderPath(apiPackageName);
+        return targetSourcesPath + convertPackageNameToFolderPath(apiPackageName);
     }
 
     private String convertPackageNameToFolderPath(String packageName) {
         return packageName.replaceAll("\\.", "/");
     }
 
-    private String convertFolderPathToPackageName(String folderName) {
-        return folderName.replaceAll("/", "\\.");
-    }
 
-    private void cleanupAndCreateFolders(String generatedApiTarget) {
-        File apiCodeFolder = new File(generatedApiTarget);
-        apiCodeFolder.mkdirs();
-        for (File f : apiCodeFolder.listFiles()) {
-            f.delete();
-        }
-    }
-
-    private String removeSubstrings(String initial, String... substrings) {
-        for (String substring : substrings) {
-            initial = initial.replace(substring, "");
-        }
-        return initial;
-    }
-
-    private void initClassLoader() throws MojoFailureException {
-        URL url;
+    // get a classloader that has the projects compile time dependencies included with it
+    private ClassLoader getProjectClassloader() {
+        List<String> classpathElements = null;
         try {
-            url = new File(compiledClassesPath).toURI().toURL();
-        } catch (MalformedURLException e) {
-            throw new MojoFailureException("Path to classes is missed");
+            classpathElements = project.getCompileClasspathElements();
+            List<URL> projectClasspathList = new ArrayList<URL>();
+            for (String element : classpathElements) {
+                try {
+                    projectClasspathList.add(new File(element).toURI().toURL());
+                } catch (MalformedURLException e) {
+                    throw new MojoExecutionException(element + " is an invalid classpath element", e);
+                }
+            }
+
+            URLClassLoader loader = new URLClassLoader(projectClasspathList.toArray(new URL[0]));
+            return loader;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Dependency resolution failed", e);
         }
-        URL[] urls = new URL[1];
-        urls[0] = url;
-        urlClassLoader = new URLClassLoader(urls);
     }
 }
