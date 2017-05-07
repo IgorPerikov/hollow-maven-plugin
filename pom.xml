@@ -4,7 +4,7 @@
 
     <groupId>com.github.igorperikov</groupId>
     <artifactId>hollow-maven-plugin</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.0</version>
     <packaging>maven-plugin</packaging>
 
     <name>Hollow maven plugin</name>
@@ -38,7 +38,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.7</java.version>
-        <hollow.version>2.3.1</hollow.version>
+        <hollow.version>2.5.1</hollow.version>
     </properties>
 
     <dependencies>
