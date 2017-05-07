@@ -9,7 +9,7 @@ In order to use, add plugin to your `pom.xml` file and configure it
 <plugin>
     <groupId>com.github.igorperikov</groupId>
     <artifactId>hollow-maven-plugin</artifactId>
-    <version>0.1.1</version>
+    <version>0.2.0</version>
     <configuration>
         <packagesToScan>
             <param>org.example.package1</param>
