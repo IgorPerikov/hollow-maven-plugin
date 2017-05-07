@@ -33,3 +33,6 @@ launch task:
 
 N.B. it is important to launch `compile` before `hollow:generate`
 because plugin needs .class files to generate consumer api
+
+## Known problems and misconcepts:
+If you have 3 modules - domain classes, module with consumer api and module with producer api, then **at this moment** you have to include consumer api into domain classes, so even if you dont need consumer api in producer module, you will get it with domain classes
