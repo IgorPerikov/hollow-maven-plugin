@@ -56,14 +56,11 @@ public class HollowMojo extends AbstractMojo {
     @Parameter(readonly = true, defaultValue = "${project}")
     private MavenProject project;
 
-    private File projectDirFile;
-    private String projectDirPath;
+
     private String targetSourcesPath;
 
     
     public void execute() throws MojoExecutionException, MojoFailureException {
-        projectDirFile = project.getBasedir();
-        projectDirPath = projectDirFile.getAbsolutePath();
         targetSourcesPath = outputDirectory;
 
 
@@ -95,7 +92,6 @@ public class HollowMojo extends AbstractMojo {
 
     private Collection<Class<?>> extractClasses(List<String> packagesToScan) {
         Set<Class<?>> classes = new HashSet<>();
-        Set<URL> urlsToScan = new HashSet<>();
         ClassLoader projectClassloader = getProjectClassloader();
 
         FastClasspathScanner scanner = new FastClasspathScanner(packagesToScan.toArray(new String[packagesToScan.size()])).addClassLoader(projectClassloader);
@@ -134,7 +130,7 @@ public class HollowMojo extends AbstractMojo {
                 }
             }
 
-            URLClassLoader loader = new URLClassLoader(projectClasspathList.toArray(new URL[0]));
+            URLClassLoader loader = URLClassLoader.newInstance(projectClasspathList.toArray(new URL[0]), Thread.currentThread().getContextClassLoader());
             return loader;
 
         } catch (Exception e) {
