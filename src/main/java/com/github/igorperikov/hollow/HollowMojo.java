@@ -56,13 +56,10 @@ public class HollowMojo extends AbstractMojo {
     @Parameter(readonly = true, defaultValue = "${project}")
     private MavenProject project;
 
-
     private String targetSourcesPath;
 
-    
     public void execute() throws MojoExecutionException, MojoFailureException {
         targetSourcesPath = outputDirectory;
-
 
         HollowWriteStateEngine writeEngine = new HollowWriteStateEngine();
         HollowObjectMapper mapper = new HollowObjectMapper(writeEngine);
@@ -115,13 +112,12 @@ public class HollowMojo extends AbstractMojo {
         return packageName.replaceAll("\\.", "/");
     }
 
-
     // get a classloader that has the projects compile time dependencies included with it
     private ClassLoader getProjectClassloader() {
-        List<String> classpathElements = null;
+        List<String> classpathElements;
         try {
             classpathElements = project.getCompileClasspathElements();
-            List<URL> projectClasspathList = new ArrayList<URL>();
+            List<URL> projectClasspathList = new ArrayList<>();
             for (String element : classpathElements) {
                 try {
                     projectClasspathList.add(new File(element).toURI().toURL());
@@ -130,8 +126,10 @@ public class HollowMojo extends AbstractMojo {
                 }
             }
 
-            URLClassLoader loader = URLClassLoader.newInstance(projectClasspathList.toArray(new URL[0]), Thread.currentThread().getContextClassLoader());
-            return loader;
+            return URLClassLoader.newInstance(
+                    projectClasspathList.toArray(new URL[0]),
+                    Thread.currentThread().getContextClassLoader()
+            );
 
         } catch (Exception e) {
             throw new RuntimeException("Dependency resolution failed", e);
