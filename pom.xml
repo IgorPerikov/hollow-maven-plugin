@@ -5,7 +5,7 @@
 
     <groupId>com.github.igorperikov</groupId>
     <artifactId>hollow-maven-plugin</artifactId>
-    <version>0.2.1-SNAPSHOT</version>
+    <version>0.3.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>Hollow maven plugin</name>
@@ -39,10 +39,30 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.7</java.version>
-        <hollow.version>2.5.1</hollow.version>
+        <hollow.version>2.6.3</hollow.version>
+        <reflections.version>0.9.11</reflections.version>
+        <fast-classpath-scanner.version>2.0.21</fast-classpath-scanner.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>${reflections.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.lukehutch</groupId>
+            <artifactId>fast-classpath-scanner</artifactId>
+            <version>${fast-classpath-scanner.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.netflix.hollow</groupId>
+            <artifactId>hollow</artifactId>
+            <version>${hollow.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
@@ -68,26 +88,6 @@
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
             <version>3.4</version>
-        </dependency>
-
-        <!-- for finding the dependencies -->
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.11</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.lukehutch</groupId>
-            <artifactId>fast-classpath-scanner</artifactId>
-            <version>LATEST</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.netflix.hollow</groupId>
-            <artifactId>hollow</artifactId>
-            <version>${hollow.version}</version>
         </dependency>
 
         <dependency>
