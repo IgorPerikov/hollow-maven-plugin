@@ -5,6 +5,7 @@ described [here](http://hollow.how/getting-started/#consumer-api-generation)
 
 ## Versions mapping
 It's **not recommended** to use plugin with version that is not listed below. This rule is temporary, until the stable release comes
+
 | Plugin version | Hollow version | 
 | --- | --- |
 | 0.3.0 | 2.6.3 |
