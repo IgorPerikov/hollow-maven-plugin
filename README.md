@@ -17,12 +17,87 @@ You can use plugin in two different configurations:
 * In case you don't want to have all this classes in your VCS - stick to the multi-module configuration. 
 
 ## Single module
-TBD
+All you need is to add this blocks into your `pom.xml`:
+```
+    <dependencies>
+        <dependency>
+            <groupId>com.netflix.hollow</groupId>
+            <artifactId>hollow</artifactId>
+            <version>2.6.3</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.igorperikov</groupId>
+                <artifactId>hollow-maven-plugin</artifactId>
+                <version>0.3.0</version>
+                <configuration>
+                    <packagesToScan>
+                        <param>your.package.datamodel</param>
+                    </packagesToScan>
+                    <apiClassName>EntityApi</apiClassName>
+                    <apiPackageName>your.package.api</apiPackageName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+```
+
+Execute `mvn compile hollow:generate-as-project-sources` to create consumer api classes under `src/main/java/{apiPackageName}`
+
 [complete example](https://github.com/IgorPerikov/hollow-maven-plugin-examples/tree/master/single-module-example)
 
 ## Multi module
-You need to setup 2 modules, one for your data model classes and the other one for your consumer api.
-TBD
+You need to setup 2 modules, one for your data model classes and the other one for your consumer api. Module with data classes 
+is a plain module with your classes and the 2nd module purpose is to store consumer api classes. They will be created as a 
+generated sources of your final jar file, to use them, add this module as a dependency in the consumer application(which is probably the 3rd module) 
+
+Add this blocks to your consumer-api artifact
+```
+<dependencies>
+        <dependency>
+            <groupId>your.package</groupId>
+            <artifactId>your-data-model-artifact</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.netflix.hollow</groupId>
+            <artifactId>hollow</artifactId>
+            <version>2.6.3</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.igorperikov</groupId>
+                <artifactId>hollow-maven-plugin</artifactId>
+                <version>0.3.0</version>
+
+                <executions>
+                    <execution>
+                        <id>generate-hollow-consumer-api</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-as-target-sources</goal>
+                        </goals>
+                        <configuration>
+                            <packagesToScan>
+                                <param>your.package.datamodel</param>
+                            </packagesToScan>
+                            <apiClassName>EntityApi</apiClassName>
+                            <apiPackageName>your.package.api</apiPackageName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+```
+`mvn clean install` and you get a jar which contains consumer api classes, simply add this jar as a dependency to your application
+
 [complete example](https://github.com/IgorPerikov/hollow-maven-plugin-examples/tree/master/multi-module-example)
 
 ## Plugin configuration properties
