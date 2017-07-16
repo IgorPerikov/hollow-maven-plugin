@@ -26,7 +26,7 @@ public class ClassExtractorUtility {
         List<String> classNames = scanner.scan().getNamesOfAllClasses();
         for (String className : classNames) {
             try {
-                Clazz<?> clazz = Class.forName(className, false, projectClassloader);
+                Class<?> clazz = Class.forName(className, false, projectClassloader);
                 if (!clazz.isAnnotation() && !clazz.isInterface()) {
                     classes.add(clazz);
                 }
