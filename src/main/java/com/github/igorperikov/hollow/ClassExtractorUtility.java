@@ -26,7 +26,10 @@ public class ClassExtractorUtility {
         List<String> classNames = scanner.scan().getNamesOfAllClasses();
         for (String className : classNames) {
             try {
-                classes.add(Class.forName(className, false, projectClassloader));
+                Clazz<?> clazz = Class.forName(className, false, projectClassloader);
+                if (!clazz.isAnnotation() && !clazz.isInterface()) {
+                    classes.add(clazz);
+                }
             } catch (ClassNotFoundException e) {
                 throw new MojoExecutionException("Couldn't add class " + className + " to the set of classes for some reason", e);
             }
