@@ -1,6 +1,7 @@
 package com.github.igorperikov.hollow;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import java.lang.reflect.Modifier;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
@@ -27,7 +28,7 @@ public class ClassExtractorUtility {
         for (String className : classNames) {
             try {
                 Class<?> clazz = Class.forName(className, false, projectClassloader);
-                if (!clazz.isAnnotation() && !clazz.isInterface()) {
+                if (isValidClass(clazz)) {
                     classes.add(clazz);
                 }
             } catch (ClassNotFoundException e) {
@@ -35,6 +36,10 @@ public class ClassExtractorUtility {
             }
         }
         return classes;
+    }
+    
+    private static boolean isValidClass(Class<?> clazz) {
+        return !clazz.isAnnotation() && !clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers());
     }
 
     private static ClassLoader getProjectClassloader(MavenProject project) {
