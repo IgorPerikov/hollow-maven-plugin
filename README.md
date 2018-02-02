@@ -9,6 +9,7 @@ It's **not recommended** to use plugin with version that is not listed below. Th
 | Plugin version | Hollow version | 
 | --- | --- |
 | 0.4.0 | 2.6.3 |
+| 0.5.0 | 2.6.3 |
 
 ## Usage
 You can use plugin in two different configurations: 
@@ -32,7 +33,7 @@ All you need is to add this blocks into your `pom.xml`:
             <plugin>
                 <groupId>com.github.igorperikov</groupId>
                 <artifactId>hollow-maven-plugin</artifactId>
-                <version>0.4.0</version>
+                <version>0.5.0</version>
                 <configuration>
                     <packagesToScan>
                         <param>your.package.datamodel</param>
@@ -74,7 +75,7 @@ Add this blocks to your consumer-api artifact
             <plugin>
                 <groupId>com.github.igorperikov</groupId>
                 <artifactId>hollow-maven-plugin</artifactId>
-                <version>0.4.0</version>
+                <version>0.5.0</version>
 
                 <executions>
                     <execution>
