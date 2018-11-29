@@ -6,10 +6,11 @@ described [here](http://hollow.how/getting-started/#consumer-api-generation)
 ## Versions mapping
 It's **not recommended** to use plugin with version that is not listed below. This rule is temporary, until the stable release comes
 
-| Plugin version | Hollow version | 
-| --- | --- |
-| 0.4.0 | 2.6.3 |
-| 0.5.0 | 2.6.3 |
+| Plugin version | Hollow version | Java version | Maven |
+| --- | --- | --- | --- |
+| 0.4.0 | 2.6.3 | 1.7 | 3.2.5 |
+| 0.5.0 | 2.6.3 | 1.7 | 3.2.5 |
+| 1.0.0 | 4.0.3 | 1.8 | 3.3 |
 
 ## Usage
 You can use plugin in two different configurations: 
