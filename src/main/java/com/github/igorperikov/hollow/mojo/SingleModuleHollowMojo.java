@@ -27,6 +27,7 @@ public class SingleModuleHollowMojo extends AbstractMojo {
     @Parameter(readonly = true, defaultValue = "${project}")
     private MavenProject project;
 
+    @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         String javaSourcesPath = project.getBasedir().getAbsolutePath() + "/src/main/java/";
         String apiTargetFolderPath = FolderUtils.buildPathToApiTargetFolder(apiPackageName, javaSourcesPath);

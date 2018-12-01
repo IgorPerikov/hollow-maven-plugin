@@ -38,6 +38,7 @@ public class MultiModuleHollowMojo extends AbstractMojo {
     @Parameter(readonly = true, defaultValue = "${project}")
     private MavenProject project;
 
+    @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         String apiTargetFolderPath = FolderUtils.buildPathToApiTargetFolder(apiPackageName, outputDirectory);
         HollowAPIGenerator generator = HollowAPIGeneratorUtility.createHollowAPIGenerator(

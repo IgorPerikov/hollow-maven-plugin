@@ -7,10 +7,15 @@ public class FolderUtils {
         return path + convertPackageNameToFolderPath(apiPackageName);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void cleanupAndCreateFolders(String folderPath) {
         File apiCodeFolder = new File(folderPath);
         apiCodeFolder.mkdirs();
-        for (File f : apiCodeFolder.listFiles()) {
+        File[] files = apiCodeFolder.listFiles();
+        if (files == null) {
+            throw new IllegalArgumentException("Incorrect path provided");
+        }
+        for (File f : files) {
             f.delete();
         }
     }

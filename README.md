@@ -10,7 +10,7 @@ It's **not recommended** to use plugin with version that is not listed below. Th
 | --- | --- | --- | --- |
 | 0.4.0 | 2.6.3 | 1.7 | 3.2.5 |
 | 0.5.0 | 2.6.3 | 1.7 | 3.2.5 |
-| 1.0.0 | 4.0.3 | 1.8 | 3.3 |
+| 1.0.0 | 4.0.3 | 1.8 | 3.3.9 |
 
 ## Usage
 You can use plugin in two different configurations: 
