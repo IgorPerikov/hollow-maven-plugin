@@ -1,29 +1,25 @@
-package com.github.igorperikov.hollow;
+package com.github.igorperikov.hollow.utils;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import java.lang.reflect.Modifier;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
+import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 
-public class ClassExtractorUtility {
-
+public class ClasspathUtils {
     public static Collection<Class<?>> extractClasses(
             MavenProject project,
             List<String> packagesToScan
-    )
-            throws MojoExecutionException
-    {
+    ) throws MojoExecutionException {
         Set<Class<?>> classes = new HashSet<>();
         ClassLoader projectClassloader = getProjectClassloader(project);
 
-        FastClasspathScanner scanner =
-                new FastClasspathScanner(packagesToScan.toArray(new String[packagesToScan.size()])).addClassLoader(projectClassloader);
+        FastClasspathScanner scanner = new FastClasspathScanner(packagesToScan.toArray(new String[packagesToScan.size()])).addClassLoader(projectClassloader);
         List<String> classNames = scanner.scan().getNamesOfAllClasses();
         for (String className : classNames) {
             try {
@@ -32,7 +28,7 @@ public class ClassExtractorUtility {
                     classes.add(clazz);
                 }
             } catch (ClassNotFoundException e) {
-                throw new MojoExecutionException("Couldn't add class " + className + " to the set of classes for some reason", e);
+                throw new MojoExecutionException("Couldn't add class " + className + " to the set of classes", e);
             }
         }
         return classes;

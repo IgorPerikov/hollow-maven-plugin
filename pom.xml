@@ -5,7 +5,7 @@
 
     <groupId>com.github.igorperikov</groupId>
     <artifactId>hollow-maven-plugin</artifactId>
-    <version>0.5.0</version>
+    <version>1.0.0</version>
     <packaging>maven-plugin</packaging>
 
     <name>Hollow maven plugin</name>
@@ -38,10 +38,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.7</java.version>
-        <hollow.version>2.6.3</hollow.version>
+        <java.version>1.8</java.version>
+        <maven.version>3.3.9</maven.version>
+        <hollow.version>4.0.3</hollow.version>
         <reflections.version>0.9.11</reflections.version>
-        <fast-classpath-scanner.version>2.0.21</fast-classpath-scanner.version>
+        <fast-classpath-scanner.version>2.21</fast-classpath-scanner.version>
     </properties>
 
     <dependencies>
@@ -66,35 +67,28 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
-            <version>3.2.5</version>
+            <version>${maven.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-artifact</artifactId>
-            <version>3.2.5</version>
+            <version>${maven.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-compat</artifactId>
-            <version>3.2.5</version>
+            <version>${maven.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
-            <version>3.2.5</version>
+            <version>${maven.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
             <version>3.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -111,7 +105,6 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
@@ -201,5 +194,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>
