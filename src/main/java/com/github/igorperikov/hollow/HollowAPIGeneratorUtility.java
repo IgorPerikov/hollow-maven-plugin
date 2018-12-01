@@ -1,5 +1,6 @@
 package com.github.igorperikov.hollow;
 
+import com.github.igorperikov.hollow.config.OptionalHollowProperties;
 import com.github.igorperikov.hollow.utils.ClasspathUtils;
 import com.netflix.hollow.api.codegen.HollowAPIGenerator;
 import com.netflix.hollow.core.write.HollowWriteStateEngine;
@@ -8,7 +9,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,18 +19,39 @@ public class HollowAPIGeneratorUtility {
             String apiClassName,
             String apiPackageName,
             Log log,
-            String apiTargetFolderPath
+            String apiTargetPath,
+            OptionalHollowProperties properties
     ) throws MojoExecutionException {
-        HollowWriteStateEngine writeEngine = new HollowWriteStateEngine();
-        HollowObjectMapper mapper = new HollowObjectMapper(writeEngine);
+        HollowWriteStateEngine writeStateEngine = new HollowWriteStateEngine();
+        HollowObjectMapper mapper = new HollowObjectMapper(writeStateEngine);
 
         Collection<Class<?>> datamodelClasses = ClasspathUtils.extractClasses(project, packagesToScan);
         log.info("Found " + datamodelClasses.size() + " classes");
         for (Class<?> clazz : datamodelClasses) {
-            log.debug("Initialize schema for class " + clazz.getName());
+            log.info("Initialize schema for class " + clazz.getName());
             mapper.initializeTypeState(clazz);
         }
 
-        return new HollowAPIGenerator(apiClassName, apiPackageName, writeEngine, Paths.get(apiTargetFolderPath));
+        HollowAPIGenerator.Builder builder = new HollowAPIGenerator.Builder()
+                .withAPIClassname(apiClassName)
+                .withPackageName(apiPackageName)
+                .withDataModel(writeStateEngine)
+                .withDestination(apiTargetPath)
+                .withParameterizeAllClassNames(properties.parameterizeAllClassNames)
+                .withAggressiveSubstitutions(properties.useAggressiveSubstitutions)
+                .withBooleanFieldErgonomics(properties.useBooleanFieldErgonomics)
+                .reservePrimaryKeyIndexForTypeWithPrimaryKey(properties.reservePrimaryKeyIndexForTypeWithPrimaryKey)
+                .withHollowPrimitiveTypes(properties.useHollowPrimitiveTypes)
+                .withVerboseToString(properties.useVerboseToString);
+        if (properties.useErgonomicShortcuts) {
+            builder.withErgonomicShortcuts();
+        }
+        if (properties.usePackageGrouping) {
+            builder.withPackageGrouping();
+        }
+        if (properties.restrictApiToFieldType) {
+            builder.withRestrictApiToFieldType();
+        }
+        return builder.build();
     }
 }
