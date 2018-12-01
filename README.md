@@ -35,3 +35,5 @@ You can use plugin in two different configurations:
 - `useErgonomicShortcuts`
 - `usePackageGrouping`
 - `restrictApiToFieldType`
+
+default values for those params can be found [here](/src/main/java/com/github/igorperikov/hollow/mojo/AbstractHollowMojo.java)
