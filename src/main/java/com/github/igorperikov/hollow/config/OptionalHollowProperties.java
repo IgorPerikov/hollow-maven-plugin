@@ -11,7 +11,7 @@ public class OptionalHollowProperties {
             boolean useErgonomicShortcuts,
             boolean usePackageGrouping,
             boolean restrictApiToFieldType,
-			String classPostfix
+            String classPostfix
     ) {
         this.parameterizeAllClassNames = parameterizeAllClassNames;
         this.useAggressiveSubstitutions = useAggressiveSubstitutions;
@@ -22,7 +22,7 @@ public class OptionalHollowProperties {
         this.useErgonomicShortcuts = useErgonomicShortcuts;
         this.usePackageGrouping = usePackageGrouping;
         this.restrictApiToFieldType = restrictApiToFieldType;
-		this.classPostfix = classPostfix;
+        this.classPostfix = classPostfix;
     }
 
     public final boolean parameterizeAllClassNames;
@@ -34,5 +34,5 @@ public class OptionalHollowProperties {
     public final boolean useErgonomicShortcuts;
     public final boolean usePackageGrouping;
     public final boolean restrictApiToFieldType;
-	public final String classPostfix;
+    public final String classPostfix;
 }
