@@ -45,4 +45,7 @@ public abstract class AbstractHollowMojo extends AbstractMojo {
 
     @Parameter(property = "restrictApiToFieldType", required = false, defaultValue = "true")
     public boolean restrictApiToFieldType;
+
+    @Parameter(property = "classPostfix", required = false, defaultValue = "")
+    public String classPostfix;
 }

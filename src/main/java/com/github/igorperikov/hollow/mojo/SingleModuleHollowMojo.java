@@ -32,7 +32,8 @@ public class SingleModuleHollowMojo extends AbstractHollowMojo {
                         useVerboseToString,
                         useErgonomicShortcuts,
                         usePackageGrouping,
-                        restrictApiToFieldType
+                        restrictApiToFieldType,
+                        classPostfix
                 )
         );
 

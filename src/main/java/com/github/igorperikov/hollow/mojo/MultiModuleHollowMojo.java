@@ -43,7 +43,8 @@ public class MultiModuleHollowMojo extends AbstractHollowMojo {
                         useVerboseToString,
                         useErgonomicShortcuts,
                         usePackageGrouping,
-                        restrictApiToFieldType
+                        restrictApiToFieldType,
+                        classPostfix
                 )
         );
 
