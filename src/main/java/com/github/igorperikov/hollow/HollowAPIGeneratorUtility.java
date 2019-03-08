@@ -43,7 +43,7 @@ public class HollowAPIGeneratorUtility {
                 .reservePrimaryKeyIndexForTypeWithPrimaryKey(properties.reservePrimaryKeyIndexForTypeWithPrimaryKey)
                 .withHollowPrimitiveTypes(properties.useHollowPrimitiveTypes)
                 .withVerboseToString(properties.useVerboseToString)
-				.withClassPostfix(properties.classPostfix);
+                .withClassPostfix(properties.classPostfix);
         if (properties.useErgonomicShortcuts) {
             builder.withErgonomicShortcuts();
         }
