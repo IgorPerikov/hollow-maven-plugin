@@ -42,8 +42,8 @@ public class HollowAPIGeneratorUtility {
                 .withBooleanFieldErgonomics(properties.useBooleanFieldErgonomics)
                 .reservePrimaryKeyIndexForTypeWithPrimaryKey(properties.reservePrimaryKeyIndexForTypeWithPrimaryKey)
                 .withHollowPrimitiveTypes(properties.useHollowPrimitiveTypes)
-                .withVerboseToString(properties.useVerboseToString)
-                .withClassPostfix(properties.classPostfix);
+                .withVerboseToString(properties.useVerboseToString);
+
         if (properties.useErgonomicShortcuts) {
             builder.withErgonomicShortcuts();
         }
