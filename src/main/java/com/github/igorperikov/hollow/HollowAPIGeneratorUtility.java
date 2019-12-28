@@ -55,7 +55,7 @@ public class HollowAPIGeneratorUtility {
         if (properties.restrictApiToFieldType) {
             builder.withRestrictApiToFieldType();
         }
-        if(isNotBlank(properties.classPostfix)) {
+        if (isNotBlank(properties.classPostfix)) {
             builder.withClassPostfix(properties.classPostfix);
         }
         return builder.build();
