@@ -1,5 +1,7 @@
 package com.github.igorperikov.hollow;
 
+import static org.codehaus.plexus.util.StringUtils.isNotBlank;
+
 import com.github.igorperikov.hollow.config.OptionalHollowProperties;
 import com.github.igorperikov.hollow.utils.ClasspathUtils;
 import com.netflix.hollow.api.codegen.HollowAPIGenerator;
@@ -42,8 +44,8 @@ public class HollowAPIGeneratorUtility {
                 .withBooleanFieldErgonomics(properties.useBooleanFieldErgonomics)
                 .reservePrimaryKeyIndexForTypeWithPrimaryKey(properties.reservePrimaryKeyIndexForTypeWithPrimaryKey)
                 .withHollowPrimitiveTypes(properties.useHollowPrimitiveTypes)
-                .withVerboseToString(properties.useVerboseToString)
-                .withClassPostfix(properties.classPostfix);
+                .withVerboseToString(properties.useVerboseToString);
+
         if (properties.useErgonomicShortcuts) {
             builder.withErgonomicShortcuts();
         }
@@ -52,6 +54,9 @@ public class HollowAPIGeneratorUtility {
         }
         if (properties.restrictApiToFieldType) {
             builder.withRestrictApiToFieldType();
+        }
+        if (isNotBlank(properties.classPostfix)) {
+            builder.withClassPostfix(properties.classPostfix);
         }
         return builder.build();
     }
