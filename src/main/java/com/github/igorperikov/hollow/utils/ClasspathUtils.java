@@ -1,6 +1,6 @@
 package com.github.igorperikov.hollow.utils;
 
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import io.github.classgraph.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
@@ -18,22 +18,26 @@ public class ClasspathUtils {
     ) throws MojoExecutionException {
         Set<Class<?>> classes = new HashSet<>();
         ClassLoader projectClassloader = getProjectClassloader(project);
-
-        FastClasspathScanner scanner = new FastClasspathScanner(packagesToScan.toArray(new String[packagesToScan.size()])).addClassLoader(projectClassloader);
-        List<String> classNames = scanner.scan().getNamesOfAllClasses();
-        for (String className : classNames) {
-            try {
-                Class<?> clazz = Class.forName(className, false, projectClassloader);
-                if (isValidClass(clazz)) {
-                    classes.add(clazz);
+        try (ScanResult scanResult =
+                     new ClassGraph()
+                             .addClassLoader(projectClassloader)
+                             .acceptPackages(packagesToScan.toArray(new String[0]))
+                             .scan()) {               
+            for (ClassInfo classInfo : scanResult.getAllClasses()) {
+                String className = classInfo.getName();
+                try {
+                    Class<?> clazz = Class.forName(className, false, projectClassloader);
+                    if (isValidClass(clazz)) {
+                        classes.add(clazz);
+                    }
+                } catch (ClassNotFoundException e) {
+                    throw new MojoExecutionException("Couldn't add class " + className + " to the set of classes", e);
                 }
-            } catch (ClassNotFoundException e) {
-                throw new MojoExecutionException("Couldn't add class " + className + " to the set of classes", e);
             }
         }
         return classes;
     }
-    
+
     private static boolean isValidClass(Class<?> clazz) {
         return !clazz.isAnnotation() && !clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers());
     }
