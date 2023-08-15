@@ -39,7 +39,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <maven.version>3.3.9</maven.version>
+        <maven.version>3.8.1</maven.version>
         <hollow.version>4.0.3</hollow.version>
         <reflections.version>0.9.11</reflections.version>
         <fast-classpath-scanner.version>2.21</fast-classpath-scanner.version>
